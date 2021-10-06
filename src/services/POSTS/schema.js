@@ -1,23 +1,38 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const { Schema, model } = mongoose
+const { Schema, model } = mongoose;
 
 const postSchema = new Schema(
   {
     category: { type: String },
     title: { type: String, required: true },
-    //cover : { type: String},
-    readTime: { type: String  },
-    authorName: { type:String },
-    authorAvatar: { type:String},
-    content :{ type: String},
-    createdAt: { type: Date, required: true},
-    updatedAt : { type: Date, required: true},
-        },
+    cover: { type: String },
+
+    readTime: {
+      value: { type: Number },
+      unit: { type: String },
+    },
+    author: {
+      name: { type: String },
+      avatar: { type: String },
+    },
+
+    commentBlog: [
+      {
+        asin:  String ,
+        rate:  Number ,
+        commentBody:  String,
+        authorName: String ,
+        createAt:  Date ,
+      },
+    ],
+
+    content: { type: String },
+  },
 
   {
-    timestamps: true, 
+    timestamps: true,
   }
-)
+);
 
-export default model("Post", postSchema) 
+export default model("Post", postSchema);
