@@ -1,6 +1,7 @@
 import express from "express";
 import createHttpError from "http-errors";
 import PostModel from "./schema.js";
+import commentModel from "../COMMENTS/schema.js"
 
 const postRouter = express.Router();
 
@@ -70,48 +71,58 @@ postRouter.delete("/:postId", async (req, res, next) => {
   }
 });
 
+
+
+
+
+
+
 //////////////////////////////------------------------ post router day 8 -----------------------------
 
-postRouter.post("/:postId/commentBlog", async (req, res, next) => {
+postRouter.post("/:_id/comment", async (req, res, next) => {
   try {
-    const comment = await PostModel.findById(req.body.comId);
-    if (comment) {
-      const commentToInsert = { ...comment.toObject(), commentDate: newDate() };
-      const updatePost = await PostModel.findByIdAndUpdate(req.params.postId, 
-        {$push: {comments: commentToInsert}},
-        { new: true })
-if(updatePost) { res.send(updatePost); }
-    } else {
-      next(error);
-    }
-  } catch (error) {
+
+    const PostId=req.params._id
+    const post=await PostModel.findById(req.params._id)
+    if(post){                
+        const newComment=new commentModel(req.body)
+        const commentToInsert={...newComment.toObject()}
+        const updatedPost=await PostModel.findByIdAndUpdate(
+            req.params.post,
+            {$push:{comments:commentToInsert}},
+            {new:true}
+        )
+        res.send(updatedPost)
+      }else{
+        next(createHttpError(404,`POST ID${PostId} NOT FOUND`))
+  }}
+  
+  catch (error) {
     next(error);
   }
 });
 
 
-
-postRouter.get("/:postId/commentBlog", async (req, res, next) => {
+postRouter.get("/:_id/comments", async (req, res, next) => {
   try {
-    const comment = await commentModel.findById(req.params.postId)
-    if (comment) {
-      res.send(comment.commentBlog)
+    const post = await PostModel.findById(req.params._id)
+    if (post) {
+      res.send(post.commentBlog)
     } else {
-      next(createHttpError(404, `comment with id ${req.params.postId} not found!`))
+      next((404, `post with id ${req.params._id} not found!`))
     }
   } catch (error) {
     next(error);
   }
 });
-
 
 
 //get one comment 
-postRouter.get("/postId/commentBlog/:commentId", async (req, res, next) => {
+postRouter.get("/:_id/comment/:commentId", async (req, res, next) => {
   try {
-    const post = await postModel.findById(req.params.postId)
+    const post = await PostModel.findById(req.params._id)
     if (post) {
-      const postComment = post.purchaseHistory.find(comment => comment._id.toString() === req.params.commentId) 
+      const postComment = post.commentBlog.find(comment => comment._id.toString() === req.params.commentId) 
       if (postComment) {
         res.send(postComment)
       } else {
@@ -129,7 +140,7 @@ postRouter.get("/postId/commentBlog/:commentId", async (req, res, next) => {
 
 
 
-postRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
+postRouter.delete("/:_id/comment/:commentId", async (req, res, next) => {
   try {
     const post = await postModel.findByIdAndUpdate(
         req.params.postId, 

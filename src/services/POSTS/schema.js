@@ -20,7 +20,7 @@ const postSchema = new Schema(
     commentBlog: [
       {
         asin:  String ,
-        rate:  Number ,
+        rate:  String ,
         commentBody:  String,
         authorName: String ,
         createAt:  Date ,
