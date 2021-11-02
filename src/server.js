@@ -22,6 +22,9 @@ server.use(notFoundHandler)
 server.use(badRequestHandler)
 server.use(genericErrorHandler)
 
+
+
+
 mongoose.connect(process.env.MONGO_CONNECTION)
 mongoose.connection.on("connected", () => {
   console.log("Successfully connected to Mongo!")
