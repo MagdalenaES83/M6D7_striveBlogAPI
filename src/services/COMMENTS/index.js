@@ -9,7 +9,7 @@ const commentRouter = express.Router()
 commentRouter.get("/", async (req, res, next) => {
   try {
     const mongoQuery = q2m(req.query)
-    //const total = await commentModel.countDocuments(mongoQuery.criteria)
+    
     const comment = await commentModel.find(mongoQuery.criteria, mongoQuery.options.fields)
       .limit(mongoQuery.options.limit || 3)
       .skip(mongoQuery.options.skip)

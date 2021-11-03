@@ -4,17 +4,20 @@ import cors from "cors"
 import listEndpoints from "express-list-endpoints"
 import { notFoundHandler, badRequestHandler, genericErrorHandler } from "./errorHandlers.js"
 import postRouter from "./services/POSTS/index.js"
-
+import authorR from "./services/AUTHORS/index.js"
 
 
 const server = express()
 
 const port = process.env.PORT || 3001
+
+
 server.use(cors())
 server.use(express.json())
 
 
 server.use("/posts", postRouter)
+server.use("/author", authorR)
 
 
 

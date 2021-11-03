@@ -3,8 +3,8 @@ import createHttpError from "http-errors";
 import PostModel from "./schema.js";
 import { CommentSchema }  from "../COMMENTS/schema.js"
 
-import { basicAuthMiddleware } from "../../auth/indexAutorization.js"
-import { adminOnlyMiddleware } from "../../auth/indexAutorization.js"
+//import { basicAuthMiddleware } from "../../auth/indexAutorization.js"
+//import { adminOnlyMiddleware } from "../../auth/indexAutorization.js"
 
 const postRouter = express.Router();
 
@@ -162,31 +162,6 @@ postRouter.delete("/:_id/comment/:commentId", async (req, res, next) => {
     next(error);
   }
 });
-
-
-//------------------------modul 8 
-
-
-
-postRouter.post("/me", async (req, res, next) => {
-  try {
-    const newUser = new UserSchema(req.body)
-    const { _id } = await newUser.save()
-    res.send({ _id })
-  } catch (error) {
-    next(error)
-  }
-})
-
-
-postRouter.get("/me/stories", basicAuthMiddleware, async (req, res, next) => {
-  try {
-    const users = await UserSchema.findById(req.params.id)
-    res.send(users)
-  } catch (error) {
-    next(error)
-  }
-})
 
 
 
